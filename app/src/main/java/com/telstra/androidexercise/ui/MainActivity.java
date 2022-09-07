@@ -1,8 +1,10 @@
-package com.telstra.androidexercise;
+package com.telstra.androidexercise.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.telstra.androidexercise.R;
 
 public class MainActivity extends AppCompatActivity {
 
