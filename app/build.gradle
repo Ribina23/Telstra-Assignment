@@ -46,19 +46,19 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation "androidx.recyclerview:recyclerview:1.2.1"
     //ViewModel and livedata
-    implementation "androidx.lifecycle:lifecycle-extensions:$lifeCycleVersion"
-    //Retrofit
-    implementation "com.google.code.gson:gson:$gsonVersion"
-    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
-    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+//    implementation "androidx.lifecycle:lifecycle-extensions:$lifeCycleVersion"
+//    //Retrofit
+//    implementation "com.google.code.gson:gson:$gsonVersion"
+//    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
+//    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     //Rx android
-    implementation "io.reactivex.rxjava2:rxandroid:$rxJavaVersion"
-    implementation "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
+//    implementation "io.reactivex.rxjava2:rxandroid:$rxJavaVersion"
+//    implementation "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
     //Dagger
-    implementation "com.google.dagger:dagger:$daggerVersion"
-    annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
-    implementation "com.google.dagger:dagger-android-support:$daggerVersion"
-    annotationProcessor "com.google.dagger:dagger-android-processor:$daggerVersion"
+//    implementation "com.google.dagger:dagger:$daggerVersion"
+//    annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
+//    implementation "com.google.dagger:dagger-android-support:$daggerVersion"
+//    annotationProcessor "com.google.dagger:dagger-android-processor:$daggerVersion"
 
     /*  //Glide
       implementation 'com.github.bumptech.glide:glide:4.12.0'

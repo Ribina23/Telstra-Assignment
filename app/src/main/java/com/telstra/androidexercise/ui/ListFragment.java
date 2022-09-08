@@ -2,13 +2,18 @@ package com.telstra.androidexercise.ui;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.telstra.androidexercise.R;
+import com.telstra.androidexercise.adapter.ListAdapter;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -57,10 +62,19 @@ public class ListFragment extends Fragment {
         }
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_list, container, false);
+        View v=inflater.inflate(R.layout.fragment_list, container, false);
+
+
+        RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.recycler_view);
+        ListAdapter adapter = new ListAdapter();
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(adapter);
+        return v;
     }
 }
