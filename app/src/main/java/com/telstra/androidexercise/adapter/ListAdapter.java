@@ -7,13 +7,20 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.telstra.androidexercise.R;
+import com.telstra.androidexercise.data.RowsData;
+
+import java.util.List;
 
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder>{
-//    private MyListData[] listdata;
 
+    private List<RowsData> listdata;
+    public ListAdapter(List<RowsData> responseData, FragmentActivity requireActivity) {
+        this.listdata=responseData;
+    }
     // RecyclerView recyclerView;
    /* public ListAdapter(MyListData[] listdata) {
         this.listdata = listdata;
@@ -28,15 +35,9 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-     /*   final MyListData myListData = listdata[position];
-        holder.textView.setText(listdata[position].getDescription());
-        holder.imageView.setImageResource(listdata[position].getImgId());
-        holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(view.getContext(),"click on item: "+myListData.getDescription(),Toast.LENGTH_LONG).show();
-            }
-        });*/
+        final RowsData myListData = listdata.get(position);
+        holder.textView.setText(listdata.get(position).getTitle());
+
     }
 
 

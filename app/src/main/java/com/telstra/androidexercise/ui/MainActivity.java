@@ -9,9 +9,16 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.telstra.androidexercise.R;
+import com.telstra.androidexercise.base.BaseActivity;
+import com.telstra.androidexercise.base.BaseApplication;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
+
+    @Override
+    protected int layoutRes() {
+        return 0;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,10 +28,15 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.actionbar);
         TextView title=(TextView)findViewById(getResources().getIdentifier("action_bar_title", "id", getPackageName()));
-        title.setText("Your Text Here");
+        title.setText("");
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frameLayout, new ListFragment()).commit();
 
+    }
+
+    @Override
+    public int getContainerId() {
+        return 0;
     }
 }

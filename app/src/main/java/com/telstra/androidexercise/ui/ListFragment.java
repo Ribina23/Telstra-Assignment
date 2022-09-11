@@ -2,8 +2,6 @@ package com.telstra.androidexercise.ui;
 
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,16 +9,39 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
 import com.telstra.androidexercise.R;
 import com.telstra.androidexercise.adapter.ListAdapter;
+import com.telstra.androidexercise.base.BaseFragment;
+import com.telstra.androidexercise.data.ApiService;
+import com.telstra.androidexercise.data.RowsData;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link ListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ListFragment extends Fragment {
+public class ListFragment extends BaseFragment {
+    @Inject
+    Picasso picasso;
+    @Inject
+    ApiService serviceUtil;
+    private ListAdapter adapter;
+    private List<RowsData> responseData = new ArrayList<>();
+    private ProgressBar mainProgressBar;
+    private Disposable disposable;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -64,17 +85,22 @@ public class ListFragment extends Fragment {
 
 
     @Override
+    protected int layoutRes() {
+        return 0;
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v=inflater.inflate(R.layout.fragment_list, container, false);
 
 
-        RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.recycler_view);
-        ListAdapter adapter = new ListAdapter();
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(adapter);
+
+
         return v;
     }
+
+
+
 }
