@@ -20,8 +20,8 @@ public abstract class BaseActivity extends DaggerAppCompatActivity {
 //        ButterKnife.bind(this);
     }
     public void show(BaseFragment fragment) {
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(getContainerId(), fragment).addToBackStack(null).commit();
+//        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+//        fragmentTransaction.replace(getContainerId(), fragment).addToBackStack(null).commit();
     }
     public abstract int getContainerId();
 }

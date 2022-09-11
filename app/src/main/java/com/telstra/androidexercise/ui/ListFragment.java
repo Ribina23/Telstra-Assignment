@@ -2,42 +2,38 @@ package com.telstra.androidexercise.ui;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.Toast;
+import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
 import com.telstra.androidexercise.R;
 import com.telstra.androidexercise.adapter.ListAdapter;
 import com.telstra.androidexercise.base.BaseFragment;
-import com.telstra.androidexercise.data.ApiService;
 import com.telstra.androidexercise.data.RowsData;
+import com.telstra.androidexercise.utils.ViewModelFactory;
+import com.telstra.androidexercise.viewmodel.ListViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ListFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class ListFragment extends BaseFragment {
-    @Inject
-    Picasso picasso;
-    @Inject
-    ApiService serviceUtil;
+
     private ListAdapter adapter;
     private List<RowsData> responseData = new ArrayList<>();
     private ProgressBar mainProgressBar;
@@ -48,59 +44,91 @@ public class ListFragment extends BaseFragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    @Inject
+    ViewModelFactory viewModelFactory;
+    private ListViewModel viewModel;
+    RecyclerView recyclerView;
+    /*@BindView(R.id.errorTV)*/ TextView errorTextView;
+    private ArrayList<RowsData> responseArraylist = new ArrayList();
+    SwipeRefreshLayout swipeRefreshLayout;
 
-    public ListFragment() {
+    public ListFragment(ArrayList<RowsData> responseData) {
         // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ListFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ListFragment newInstance(String param1, String param2) {
-        ListFragment fragment = new ListFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        responseArraylist.clear();
+        responseArraylist.addAll(responseData);
     }
 
 
     @Override
     protected int layoutRes() {
-        return 0;
+        return R.layout.fragment_list;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v=inflater.inflate(R.layout.fragment_list, container, false);
+        View v = inflater.inflate(R.layout.fragment_list, container, false);
 
-
-
-
+        recyclerView = (RecyclerView) v.findViewById(R.id.recycler_view);
+        errorTextView = (TextView) v.findViewById(R.id.errorTv);
+        swipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipeHRL);
         return v;
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+//        viewModel = ViewModelProviders.of(getBaseActivity(), viewModelFactory).get(ListViewModel.class);
+//        recyclerView.addItemDecoration(new DividerItemDecoration(getBaseActivity(), DividerItemDecoration.VERTICAL));
+        viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory).get(ListViewModel.class);
+
+        swipeRefreshLayout.setColorSchemeResources(R.color.orange, R.color.blue, R.color.green);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getBaseActivity()));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        recyclerView.setAdapter(new ListAdapter(responseArraylist, getBaseActivity(), getContext()));
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                swipeRefreshLayout.setRefreshing(false);
+                viewModel.fetchRepos();
 
 
+            }
+        });
+        observableViewModel();
+    }
+
+    private void observableViewModel() {
+        viewModel.getRepos().observe(getBaseActivity(), repos -> {
+            if (repos != null) {
+                recyclerView.setVisibility(View.VISIBLE);
+                recyclerView.getAdapter().notifyDataSetChanged();
+            }
+        });
+
+        viewModel.getError().observe(getBaseActivity(), isError -> {
+            if (isError != null) if (isError) {
+                errorTextView.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+                errorTextView.setText("An Error Occurred While Loading Data!");
+            } else {
+                errorTextView.setVisibility(View.GONE);
+                errorTextView.setText(null);
+            }
+        });
+
+        viewModel.getLoading().observe(getBaseActivity(), isLoading -> {
+            if (isLoading != null) {
+//                loadingView.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+                if (isLoading) {
+                    errorTextView.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
+                }
+            }
+        });
+    }
 }
+
+

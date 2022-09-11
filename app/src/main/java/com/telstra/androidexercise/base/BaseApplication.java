@@ -1,6 +1,8 @@
 package com.telstra.androidexercise.base;
 
+
 import com.telstra.androidexercise.di.component.component.ApplicationComponent;
+import com.telstra.androidexercise.di.component.component.DaggerApplicationComponent;
 
 import dagger.android.AndroidInjector;
 import dagger.android.DaggerApplication;

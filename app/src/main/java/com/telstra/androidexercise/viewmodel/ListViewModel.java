@@ -30,17 +30,17 @@ public class ListViewModel extends ViewModel {
         fetchRepos();
     }
 
-    LiveData<AboutCountry> getRepos() {
+   public LiveData<AboutCountry> getRepos() {
         return repos;
     }
-    LiveData<Boolean> getError() {
+    public LiveData<Boolean> getError() {
         return repoLoadError;
     }
-    LiveData<Boolean> getLoading() {
+  public   LiveData<Boolean> getLoading() {
         return loading;
     }
 
-    private void fetchRepos() {
+    public void fetchRepos() {
         loading.setValue(true);
         disposable.add(repoRepository.getRepositories().subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableSingleObserver<AboutCountry>() {
