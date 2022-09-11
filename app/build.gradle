@@ -38,7 +38,7 @@ def supportVersion = '1.5.0'
 def retrofitVersion = '2.4.0'
 def rxJavaVersion = '2.0.1'
 def butterKnifeVersion = '8.8.1'
-def daggerVersion = '2.28.3'
+def daggerVersion = '2.19'
 def picassoVersion = '2.71828'
 dependencies {
 
@@ -60,10 +60,12 @@ dependencies {
 
     implementation 'com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0'
     implementation "com.google.dagger:dagger:$daggerVersion"
-    implementation "com.google.dagger:dagger-android:$daggerVersion"
+//    implementation "com.google.dagger:dagger-android:$daggerVersion"
     implementation "com.google.dagger:dagger-android-support:$daggerVersion"
     annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
     annotationProcessor "com.google.dagger:dagger-android-processor:$daggerVersion"
+
+
     implementation "android.arch.lifecycle:extensions:1.1.1"
 
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"

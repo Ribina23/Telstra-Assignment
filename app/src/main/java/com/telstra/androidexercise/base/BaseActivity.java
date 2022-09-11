@@ -1,3 +1,4 @@
+/*
 package com.telstra.androidexercise.base;
 
 import android.os.Bundle;
@@ -25,3 +26,4 @@ public abstract class BaseActivity extends DaggerAppCompatActivity {
     }
     public abstract int getContainerId();
 }
+*/
