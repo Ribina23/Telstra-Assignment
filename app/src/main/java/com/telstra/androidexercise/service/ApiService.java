@@ -7,8 +7,6 @@ import retrofit2.http.GET;
 
 public interface ApiService {
 
-//    String BASE_URL = "https://dl.dropboxusercontent.com/s/2iodh4vg0eortkl/";
     @GET("facts.json")
-//    Call<AboutCountry> getsuperHeroes();
-    Single<AboutCountry> getsuperHeroes();
+    Single<AboutCountry> getAllDatas();
 }

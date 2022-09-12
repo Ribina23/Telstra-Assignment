@@ -27,13 +27,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import com.telstra.androidexercise.utils.Utilities;
 
+import static com.telstra.androidexercise.utils.ApiConstants.BASE_URL;
 import static com.telstra.androidexercise.utils.ApiConstants.HEADER_CACHE_CONTROL;
 import static com.telstra.androidexercise.utils.ApiConstants.HEADER_PRAGMA;
 
 @Module(includes = ViewModelModule.class)
 public class ApplicationModule {
 
-    private static final String BASE_URL = "https://dl.dropboxusercontent.com/s/2iodh4vg0eortkl/";
 
     /* @Singleton
      @Provides

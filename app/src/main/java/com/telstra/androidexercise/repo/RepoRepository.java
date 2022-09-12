@@ -17,7 +17,7 @@ public class RepoRepository {
     }
 
     public Single<AboutCountry> getRepositories() {
-        return repoService.getsuperHeroes();
+        return repoService.getAllDatas();
     }
 
 }

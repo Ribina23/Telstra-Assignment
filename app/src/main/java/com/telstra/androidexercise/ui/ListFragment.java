@@ -90,29 +90,7 @@ public class ListFragment extends BaseFragment implements SetResult {
 
         recyclerView = (RecyclerView) v.findViewById(R.id.recycler_view);
         errorTextView=(TextView) v.findViewById(R.id.errorTv);
-//        ListAdapter adapter = new ListAdapter(responseData,requireActivity());
-//        recyclerView.setHasFixedSize(true);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-//        recyclerView.setAdapter(adapter);
-//        *//**//*initViews();
-//        setRecyclerViewProperties();*//**//*
-//        disposable = serviceUtil.getCountryData()
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(carCategoryResponse -> {
-//                    if (carCategoryResponse.getRows() != null && carCategoryResponse.getRows().size() > 0) {
-//                        responseData.addAll(carCategoryResponse.getRows());
-//                        adapter.notifyDataSetChanged();
-//                    } else
-//                        Toast.makeText(requireContext(), "No data found!", Toast.LENGTH_SHORT).show();
-//                }, throwable -> {
-//                    if (mainProgressBar.getVisibility() == View.VISIBLE)
-//                        mainProgressBar.setVisibility(View.GONE);
-//                    Toast.makeText(requireContext(), "Internet not connect", Toast.LENGTH_SHORT).show();
-//                }, () -> {
-//                    if (mainProgressBar.getVisibility() == View.VISIBLE)
-//                        mainProgressBar.setVisibility(View.GONE);
-//                });*//*
+//
         return v;
     }
     private ArrayList<RowsData> responseArraylist = new ArrayList();
@@ -120,15 +98,15 @@ public class ListFragment extends BaseFragment implements SetResult {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        //viewmodel declaration
         viewModel = ViewModelProviders.of(getBaseActivity(), viewModelFactory).get(ListViewModel.class);
-        recyclerView.addItemDecoration(new DividerItemDecoration(getBaseActivity(), DividerItemDecoration.VERTICAL));
-
-//        recyclerView.setAdapter(new ListAdapter(viewModel, getBaseActivity(),getContext()));
+//        recyclerView.addItemDecoration(new DividerItemDecoration(getBaseActivity(), DividerItemDecoration.VERTICAL));
+//Recyclerview adapter setting
+        adapter=new ListAdapter(responseArraylist, getBaseActivity(), getContext());
         recyclerView.setLayoutManager(new LinearLayoutManager(getBaseActivity()));
-        recyclerView.setAdapter(new ListAdapter(responseArraylist, getBaseActivity(), getContext()));
-
-//        swipeRefreshLayout.setColorSchemeResources(R.color.orange, R.color.blue, R.color.green);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(getBaseActivity()));
+        recyclerView.setAdapter(adapter);
+//swipe refresh implemnettaion
+        swipeRefreshLayout.setColorSchemeResources(R.color.orange, R.color.blue, R.color.green);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -144,7 +122,14 @@ public class ListFragment extends BaseFragment implements SetResult {
 
     private void observableViewModel() {
         viewModel.getRepos().observe(getBaseActivity(), repos -> {
-            if (repos != null) recyclerView.setVisibility(View.VISIBLE);
+            if (repos != null) {
+
+                recyclerView.setVisibility(View.VISIBLE);
+                responseArraylist.clear();
+                responseArraylist.addAll(repos.getRows());
+                adapter.notifyDataSetChanged();
+
+            }
         });
 
         viewModel.getError().observe(getBaseActivity(), isError -> {
