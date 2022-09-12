@@ -27,7 +27,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import com.telstra.androidexercise.utils.Utilities;
 
-import static com.telstra.androidexercise.utils.ApiConstants.BASE_URL;
 import static com.telstra.androidexercise.utils.ApiConstants.HEADER_CACHE_CONTROL;
 import static com.telstra.androidexercise.utils.ApiConstants.HEADER_PRAGMA;
 
@@ -52,7 +51,7 @@ public class ApplicationModule {
     ) {
         return new Retrofit.Builder()
                 .client(okHttpClient)
-                .baseUrl(BASE_URL)
+                .baseUrl(BuildConfig.BASE_URL)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();

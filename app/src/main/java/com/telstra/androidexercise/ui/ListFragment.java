@@ -23,6 +23,8 @@ import com.telstra.androidexercise.data.RowsData;
 import com.telstra.androidexercise.service.SetResult;
 
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +37,7 @@ public class ListFragment extends BaseFragment implements SetResult {
     /*@BindView(R.id.recycler_view)*/ RecyclerView recyclerView;
     /*@BindView(R.id.errorTV)*/ TextView errorTextView;
 //    @BindView(R.id.loading_view) View loadingView;
-
+private static final String STATE_ITEMS = "items";
     private ListAdapter adapter;
     private List<RowsData> responseData = new ArrayList<>();
     private ProgressBar mainProgressBar;
@@ -55,30 +57,54 @@ public class ListFragment extends BaseFragment implements SetResult {
     private String mParam2;
 
 
-
-    /*// TODO: Rename and change types and number of parameters
-    public static ListFragment newInstance(String param1, String param2) {
-        ListFragment fragment = new ListFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+        if (savedInstanceState != null) {
+            // Restore some state before we've even inflated our own layout
+            // This could be generic things like an ID that our Fragment represents
+
         }
     }
+    @SuppressWarnings("unchecked")
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            // Restore some state that needs to happen after the Activity was created
+            //
+            // Note #1: Our views haven't had their states restored yet
+            // This could be a good place to restore a ListView's contents (and it's your last
+            // opportunity if you want your scroll position to be restored properly)
+            //
+            // Note #2:
+            // The following line will cause an unchecked type cast compiler warning
+            // It's impossible to actually check the type because of Java's type erasure:
+            //      At runtime all generic types become Object
+            // So the best you can do is add the @SuppressWarnings("unchecked") annotation
+            // and understand that you must make sure to not use a different type anywhere
+            responseArraylist = (ArrayList<RowsData>) savedInstanceState.getSerializable(STATE_ITEMS);
+        } else {
+            responseArraylist = new ArrayList<>();
+        }
 
-*/
+        adapter=new ListAdapter(responseArraylist, getBaseActivity(), getContext());
+        recyclerView.setAdapter(adapter);
+    }
+
+
     @Override
     protected int layoutRes() {
         return R.layout.fragment_list;
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull @NotNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+
+            outState.putSerializable(STATE_ITEMS, responseArraylist);
+
     }
 
     @Override
@@ -125,9 +151,9 @@ public class ListFragment extends BaseFragment implements SetResult {
             if (repos != null) {
 
                 recyclerView.setVisibility(View.VISIBLE);
-                responseArraylist.clear();
-                responseArraylist.addAll(repos.getRows());
-                adapter.notifyDataSetChanged();
+//                responseArraylist.clear();
+//                responseArraylist.addAll(repos.getRows());
+//                adapter.notifyDataSetChanged();
 
             }
         });
