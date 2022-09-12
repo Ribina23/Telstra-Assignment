@@ -1,6 +1,8 @@
 package com.telstra.androidexercise.di.module;
+
 import android.util.Log;
 
+import com.telstra.androidexercise.BuildConfig;
 import com.telstra.androidexercise.base.BaseApplication;
 import com.telstra.androidexercise.di.scope.AppScope;
 import com.telstra.androidexercise.service.ApiService;
@@ -18,10 +20,13 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+
 import com.telstra.androidexercise.utils.Utilities;
+
 import static com.telstra.androidexercise.utils.ApiConstants.HEADER_CACHE_CONTROL;
 import static com.telstra.androidexercise.utils.ApiConstants.HEADER_PRAGMA;
 
@@ -30,13 +35,43 @@ public class ApplicationModule {
 
     private static final String BASE_URL = "https://dl.dropboxusercontent.com/s/2iodh4vg0eortkl/";
 
-    @Singleton
+    /* @Singleton
+     @Provides
+     static Retrofit provideRetrofit() {
+         return new Retrofit.Builder().baseUrl(BASE_URL)
+
+                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                 .addConverterFactory(GsonConverterFactory.create())
+                 .build();
+     }*/
     @Provides
-    static Retrofit provideRetrofit(OkHttpClient client) {
-        return new Retrofit.Builder().baseUrl(BASE_URL)
+    @Singleton
+    static Retrofit provideRetrofit(
+            OkHttpClient okHttpClient
+
+    ) {
+        return new Retrofit.Builder()
+                .client(okHttpClient)
+                .baseUrl(BASE_URL)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
-                .client(client)
+                .build();
+    }
+
+    @Provides
+    @Singleton
+    static OkHttpClient provideOkHttpClient(
+            HttpLoggingInterceptor httpLoggingInterceptor
+
+    ) {
+        return new OkHttpClient.Builder()
+                .addInterceptor(httpLoggingInterceptor)
+                .addInterceptor(provideOfflineCacheInterceptor(BaseApplication.instance))
+//                .addNetworkInterceptor(provideCacheInterceptor(BaseApplication.instance))
+                .cache(provideCache(BaseApplication.instance))
+                .connectTimeout(0, TimeUnit.SECONDS)
+                .readTimeout(0, TimeUnit.SECONDS)
+                .writeTimeout(0, TimeUnit.SECONDS)
                 .build();
     }
 
@@ -45,18 +80,18 @@ public class ApplicationModule {
     static ApiService provideRetrofitService(Retrofit retrofit) {
         return retrofit.create(ApiService.class);
     }
-    @AppScope
+
     @Provides
-    OkHttpClient provideOkHttpClient(BaseApplication context) {
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder()
-                .addInterceptor(provideOfflineCacheInterceptor(context))
-                .addNetworkInterceptor(provideCacheInterceptor(context))
-                .cache(provideCache(context));
-        return httpClient.build();
+    @Singleton
+    static HttpLoggingInterceptor provideHttpLoggingInterceptor() {
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        Log.d("OkHttp", logging.toString());
+        return logging;
     }
-    @AppScope
+
     @Provides
-    Cache provideCache(BaseApplication context) {
+    static Cache provideCache(BaseApplication context) {
         Cache cache = null;
         try {
             cache = new Cache(new File(context.getCacheDir(), "http-cache"), 20 * 1024 * 1024); // 10 MB
@@ -67,9 +102,8 @@ public class ApplicationModule {
         return cache;
     }
 
-    @AppScope
     @Provides
-    Interceptor provideCacheInterceptor(BaseApplication context) {
+    static Interceptor provideCacheInterceptor(BaseApplication context) {
         return chain -> {
             Response response = chain.proceed(chain.request());
             CacheControl cacheControl;
@@ -90,9 +124,8 @@ public class ApplicationModule {
         };
     }
 
-    @AppScope
     @Provides
-    Interceptor provideOfflineCacheInterceptor(BaseApplication context) {
+    static Interceptor provideOfflineCacheInterceptor(BaseApplication context) {
         return chain -> {
             Request request = chain.request();
 
@@ -111,5 +144,4 @@ public class ApplicationModule {
             return chain.proceed(request);
         };
     }
-
 }
