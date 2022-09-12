@@ -1,7 +1,7 @@
-package com.telstra.androidexercise.repository;
+package com.telstra.androidexercise.repo;
 
 import com.telstra.androidexercise.data.AboutCountry;
-import com.telstra.androidexercise.data.ApiService;
+import com.telstra.androidexercise.service.ApiService;
 
 import javax.inject.Inject;
 
@@ -17,7 +17,7 @@ public class RepoRepository {
     }
 
     public Single<AboutCountry> getRepositories() {
-        return repoService.getApiData();
+        return repoService.getsuperHeroes();
     }
 
 }

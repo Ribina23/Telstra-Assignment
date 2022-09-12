@@ -1,11 +1,9 @@
-package com.telstra.androidexercise.di.component.module;
-
+package com.telstra.androidexercise.di.module;
 import android.util.Log;
 
 import com.telstra.androidexercise.base.BaseApplication;
-import com.telstra.androidexercise.data.ApiService;
-import com.telstra.androidexercise.di.component.scope.AppScope;
-import com.telstra.androidexercise.utils.Utilities;
+import com.telstra.androidexercise.di.scope.AppScope;
+import com.telstra.androidexercise.service.ApiService;
 
 import java.io.File;
 import java.util.concurrent.TimeUnit;
@@ -23,7 +21,7 @@ import okhttp3.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-
+import com.telstra.androidexercise.utils.Utilities;
 import static com.telstra.androidexercise.utils.ApiConstants.HEADER_CACHE_CONTROL;
 import static com.telstra.androidexercise.utils.ApiConstants.HEADER_PRAGMA;
 

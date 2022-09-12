@@ -1,4 +1,4 @@
-package com.telstra.androidexercise.utils;
+package com.telstra.androidexercise.ui;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;

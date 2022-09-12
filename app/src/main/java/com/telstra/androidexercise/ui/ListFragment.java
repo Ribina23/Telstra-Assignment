@@ -1,35 +1,27 @@
 package com.telstra.androidexercise.ui;
 
-import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
-import android.os.Parcelable;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.telstra.androidexercise.R;
 import com.telstra.androidexercise.adapter.ListAdapter;
 import com.telstra.androidexercise.base.BaseFragment;
-import com.telstra.androidexercise.data.RowsData;
-import com.telstra.androidexercise.utils.ViewModelFactory;
 import com.telstra.androidexercise.viewmodel.ListViewModel;
+import com.telstra.androidexercise.data.RowsData;
+import com.telstra.androidexercise.service.SetResult;
 
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,101 +31,105 @@ import javax.inject.Inject;
 import io.reactivex.disposables.Disposable;
 
 
-public class ListFragment extends BaseFragment {
+public class ListFragment extends BaseFragment implements SetResult {
+    /*@BindView(R.id.recycler_view)*/ RecyclerView recyclerView;
+    /*@BindView(R.id.errorTV)*/ TextView errorTextView;
+//    @BindView(R.id.loading_view) View loadingView;
 
     private ListAdapter adapter;
-    private ArrayList<RowsData> responseData = new ArrayList<>();
+    private List<RowsData> responseData = new ArrayList<>();
     private ProgressBar mainProgressBar;
     private Disposable disposable;
+    @Inject
+    ViewModelFactory viewModelFactory;
+    private ListViewModel viewModel;
+    SwipeRefreshLayout swipeRefreshLayout;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    @Inject
-    ViewModelFactory viewModelFactory;
-    private ListViewModel viewModel;
-    RecyclerView recyclerView;
-    /*@BindView(R.id.errorTV)*/ TextView errorTextView;
-    private ArrayList<RowsData> responseArraylist = new ArrayList();
-    SwipeRefreshLayout swipeRefreshLayout;
-    RowsData data;
+    // TODO: Rename and change types of parameters
+    private String mParam1;
+    private String mParam2;
 
-    public ListFragment(ArrayList<RowsData> responseData) {
-        // Required empty public constructor
-        responseArraylist.clear();
-        responseArraylist.addAll(responseData);
+
+
+    /*// TODO: Rename and change types and number of parameters
+    public static ListFragment newInstance(String param1, String param2) {
+        ListFragment fragment = new ListFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
+        fragment.setArguments(args);
+        return fragment;
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
+        }
+    }
 
+*/
     @Override
     protected int layoutRes() {
         return R.layout.fragment_list;
     }
-    public void setData(RowsData data) {
-        this.data = data;
-    }
-
-    public RowsData getData() {
-        return data;
-    }
-    private static final String STATE_ITEMS = "items";
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_list, container, false);
+        swipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipeHRL);
 
         recyclerView = (RecyclerView) v.findViewById(R.id.recycler_view);
-        errorTextView = (TextView) v.findViewById(R.id.errorTv);
-        swipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipeHRL);
+        errorTextView=(TextView) v.findViewById(R.id.errorTv);
+//        ListAdapter adapter = new ListAdapter(responseData,requireActivity());
+//        recyclerView.setHasFixedSize(true);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+//        recyclerView.setAdapter(adapter);
+//        *//**//*initViews();
+//        setRecyclerViewProperties();*//**//*
+//        disposable = serviceUtil.getCountryData()
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(carCategoryResponse -> {
+//                    if (carCategoryResponse.getRows() != null && carCategoryResponse.getRows().size() > 0) {
+//                        responseData.addAll(carCategoryResponse.getRows());
+//                        adapter.notifyDataSetChanged();
+//                    } else
+//                        Toast.makeText(requireContext(), "No data found!", Toast.LENGTH_SHORT).show();
+//                }, throwable -> {
+//                    if (mainProgressBar.getVisibility() == View.VISIBLE)
+//                        mainProgressBar.setVisibility(View.GONE);
+//                    Toast.makeText(requireContext(), "Internet not connect", Toast.LENGTH_SHORT).show();
+//                }, () -> {
+//                    if (mainProgressBar.getVisibility() == View.VISIBLE)
+//                        mainProgressBar.setVisibility(View.GONE);
+//                });*//*
         return v;
     }
-    Integer  lastPosition=0;
-LinearLayoutManager layoutManager;
-    @Override
-    public void onActivityCreated(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState != null) {
-            // Restore some state that needs to happen after the Activity was created
-            //
-            // Note #1: Our views haven't had their states restored yet
-            // This could be a good place to restore a ListView's contents (and it's your last
-            // opportunity if you want your scroll position to be restored properly)
-            //
-            // Note #2:
-            // The following line will cause an unchecked type cast compiler warning
-            // It's impossible to actually check the type because of Java's type erasure:
-            //      At runtime all generic types become Object
-            // So the best you can do is add the @SuppressWarnings("unchecked") annotation
-            // and understand that you must make sure to not use a different type anywhere
-            responseArraylist = (ArrayList<RowsData>) savedInstanceState.getSerializable(STATE_ITEMS);
-        } else {
-            responseArraylist = new ArrayList<>();
-        }
-
-    }
-
-    @Override
-    public void onSaveInstanceState(@NonNull @NotNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        outState.putSerializable(STATE_ITEMS, responseArraylist);
-    }
+    private ArrayList<RowsData> responseArraylist = new ArrayList();
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-//        viewModel = ViewModelProviders.of(getBaseActivity(), viewModelFactory).get(ListViewModel.class);
-//        recyclerView.addItemDecoration(new DividerItemDecoration(getBaseActivity(), DividerItemDecoration.VERTICAL));
-        viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory).get(ListViewModel.class);
+        viewModel = ViewModelProviders.of(getBaseActivity(), viewModelFactory).get(ListViewModel.class);
+        recyclerView.addItemDecoration(new DividerItemDecoration(getBaseActivity(), DividerItemDecoration.VERTICAL));
 
-        swipeRefreshLayout.setColorSchemeResources(R.color.orange, R.color.blue, R.color.green);
+//        recyclerView.setAdapter(new ListAdapter(viewModel, getBaseActivity(),getContext()));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getBaseActivity()));
+        recyclerView.setAdapter(new ListAdapter(responseArraylist, getBaseActivity(), getContext()));
+
+//        swipeRefreshLayout.setColorSchemeResources(R.color.orange, R.color.blue, R.color.green);
 //        recyclerView.setLayoutManager(new LinearLayoutManager(getBaseActivity()));
-     swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
 
@@ -143,38 +139,12 @@ LinearLayoutManager layoutManager;
 
             }
         });
-        SharedPreferences getPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-        lastPosition = getPrefs.getInt("lastPos", 0);
-        recyclerView.scrollToPosition(lastPosition);
-        layoutManager=new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-
-        recyclerView.setLayoutManager(   layoutManager);
-        recyclerView.setAdapter(new ListAdapter(responseArraylist, getBaseActivity(), getContext()));
-
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                lastPosition = layoutManager.findFirstVisibleItemPosition();
-            }
-        });
         observableViewModel();
     }
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-     if(savedInstanceState==null){
 
-     }else{
-
-     }
-    }
     private void observableViewModel() {
         viewModel.getRepos().observe(getBaseActivity(), repos -> {
-            if (repos != null) {
-                recyclerView.setVisibility(View.VISIBLE);
-                recyclerView.getAdapter().notifyDataSetChanged();
-            }
+            if (repos != null) recyclerView.setVisibility(View.VISIBLE);
         });
 
         viewModel.getError().observe(getBaseActivity(), isError -> {
@@ -192,7 +162,7 @@ LinearLayoutManager layoutManager;
             if (isLoading != null) {
 //                loadingView.setVisibility(isLoading ? View.VISIBLE : View.GONE);
                 if (isLoading) {
-                    errorTextView.setVisibility(View.VISIBLE);
+                    errorTextView.setVisibility(View.GONE);
                     recyclerView.setVisibility(View.GONE);
                 }
             }
@@ -200,13 +170,8 @@ LinearLayoutManager layoutManager;
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        SharedPreferences getPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-        SharedPreferences.Editor e = getPrefs.edit();
-        e.putInt("lastPos", lastPosition);
-        e.apply();
+    public void setData(ArrayList<RowsData> data) {
+        responseArraylist.clear();
+        responseArraylist.addAll(data);
     }
 }
-
-

@@ -1,12 +1,12 @@
-package com.telstra.androidexercise.di.component.module;
+package com.telstra.androidexercise.di.module;
 
 
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.telstra.androidexercise.utils.ViewModelFactory;
-import com.telstra.androidexercise.utils.ViewModelKey;
+import com.telstra.androidexercise.ui.ViewModelFactory;
 import com.telstra.androidexercise.viewmodel.ListViewModel;
+import com.telstra.androidexercise.utils.ViewModelKey;
 
 import dagger.Binds;
 import dagger.Module;

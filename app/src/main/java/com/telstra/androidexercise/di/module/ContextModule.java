@@ -1,4 +1,4 @@
-package com.telstra.androidexercise.di.component.module;
+package com.telstra.androidexercise.di.module;
 
 import android.app.Application;
 import android.content.Context;

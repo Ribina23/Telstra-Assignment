@@ -1,31 +1,26 @@
 package com.telstra.androidexercise.ui;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.widget.TextView;
+
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
-import android.os.Bundle;
-import android.view.View;
-import android.widget.TextView;
 
 import com.telstra.androidexercise.R;
-import com.telstra.androidexercise.base.BaseApplication;
 import com.telstra.androidexercise.data.RowsData;
-import com.telstra.androidexercise.utils.ViewModelFactory;
+import com.telstra.androidexercise.service.SetResult;
+import com.telstra.androidexercise.ui.ListFragment;
 import com.telstra.androidexercise.viewmodel.ListViewModel;
 
 import java.util.ArrayList;
 
 import javax.inject.Inject;
 
-import dagger.android.DaggerActivity;
 import dagger.android.support.DaggerAppCompatActivity;
 
 
-public class MainActivity extends DaggerAppCompatActivity {
+public class MainActivity extends DaggerAppCompatActivity implements SetResult {
 
     /*@Override
     protected int layoutRes() {
@@ -34,6 +29,7 @@ public class MainActivity extends DaggerAppCompatActivity {
 */
     @Inject
     ViewModelFactory viewModelFactory;
+
     private ListViewModel viewModel;
     TextView title;
     private static final String TAG_WORKER_FRAGMENT = "WorkerFragment";
@@ -44,15 +40,15 @@ public class MainActivity extends DaggerAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        getSupportActionBar().setCustomView(R.layout.actionbar);
-        title = (TextView) findViewById(getResources().getIdentifier("action_bar_title", "id", getPackageName()));
+//        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+//        getSupportActionBar().setCustomView(R.layout.actionbar);
+//        title = (TextView) findViewById(getResources().getIdentifier("action_bar_title", "id", getPackageName()));
 
 
 
-            viewModel = ViewModelProviders.of(this, viewModelFactory).get(ListViewModel.class);
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(ListViewModel.class);
 //        mWorkerFragment = (ListFragment) getSupportFragmentManager().getFragment(savedInstanceState, "listFragment");
-        if (savedInstanceState == null) {
+        /*if (savedInstanceState == null) {
             // The Activity is NOT being re-created so we can instantiate a new Fragment
             // and add it to the Activity
             mWorkerFragment = new ListFragment(responseData);
@@ -68,56 +64,35 @@ public class MainActivity extends DaggerAppCompatActivity {
             // The Activity IS being re-created so we don't need to instantiate the Fragment or add it,
             // but if we need a reference to it, we can use the tag we passed to .replace
             mWorkerFragment = (ListFragment) getSupportFragmentManager().findFragmentByTag("TAG_MY_FRAGMENT");
-        }
-     /*   if (findViewById(R.id.constraintL) != null) {
-            if (savedInstanceState == null) {
-
-                getSupportFragmentManager().beginTransaction()
-                        .add(R.id.frameLayout, mWorkerFragment)
-                        .commit();
-            }
-        }
-        else {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.frameLayout, mWorkerFragment)
-                    .commit();
         }*/
+        FragmentManager fragmentManager = getSupportFragmentManager();
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.frameLayout, new ListFragment()).commit();
+//
         observableViewModel();
-      /*  if (savedInstanceState != null) {
-            //Restore the fragment's instance
-            mWorkerFragment = (ListFragment) getSupportFragmentManager().getFragment(savedInstanceState, "listFragment");
-        } else {
-           *//* FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.frameLayout, new ListFragment(responseData)).commit();
-*//*
-            if(responseData.size()==0)
-                observableViewModel();
-            else {
-                mWorkerFragment = new ListFragment(responseData);
-                getSupportFragmentManager().beginTransaction().add(R.id.frameLayout, mWorkerFragment, "listFragment").commit();
-            } }*/
+
     }
-//    @Override
-//    protected void onSaveInstanceState(Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//        //Save the fragment's instance
-//        if(mWorkerFragment!=null)
-//        getSupportFragmentManager().putFragment(outState, "listFragment", mWorkerFragment);
-//    }
+    /*   @Override
+       protected void onSaveInstanceState(Bundle outState) {
+           super.onSaveInstanceState(outState);
+           //Save the fragment's instance
+           if(mWorkerFragment!=null)
+           getSupportFragmentManager().putFragment(outState, "TAG_MY_FRAGMENT", mWorkerFragment);
+       }*/
     private ArrayList<RowsData> responseData = new ArrayList<>();
 
     private void observableViewModel() {
         viewModel.getRepos().observe(this, repos -> {
             if (repos != null) {
-                title.setText(repos.getTitle().toString());/*recyclerView.setVisibility(View.VISIBLE);*/
+//                title.setText(repos.getTitle().toString());/*recyclerView.setVisibility(View.VISIBLE);*/
                 responseData.clear();
                 responseData.addAll(repos.getRows());
+                ((SetResult)this).setData(responseData);
 //                FragmentManager fragmentManager = getSupportFragmentManager();
 //                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 //                fragmentTransaction.replace(R.id.frameLayout, new ListFragment(responseData)).commit();
-                mWorkerFragment = new ListFragment(responseData);
-                getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, mWorkerFragment, "listFragment").commit();
+//                mWorkerFragment = new ListFragment(responseData);
+//                getSupportFragmentManager().beginTransaction().replace(R.id.framelayout, mWorkerFragment, "listFragment").commit();
 
                 /*   */   /*   mWorkerFragment = (ListFragment) fragmentManager.findFragmentByTag(TAG_WORKER_FRAGMENT);
                 if (mWorkerFragment == null) {
@@ -150,6 +125,14 @@ public class MainActivity extends DaggerAppCompatActivity {
                 }
             }
         });
+    }
+
+
+
+    @Override
+    public void setData(ArrayList<RowsData> data) {
+     ListFragment listFragment= (ListFragment) getSupportFragmentManager().findFragmentById(R.id.frameLayout);
+        listFragment.setData(data);
     }
 /*
     @Override

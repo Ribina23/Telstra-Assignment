@@ -1,4 +1,4 @@
-package com.telstra.androidexercise.di.component.scope;
+package com.telstra.androidexercise.di.scope;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

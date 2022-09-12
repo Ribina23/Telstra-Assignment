@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.telstra.androidexercise.data.AboutCountry;
-import com.telstra.androidexercise.repository.RepoRepository;
+import com.telstra.androidexercise.repo.RepoRepository;
 
 import javax.inject.Inject;
 
@@ -30,13 +30,13 @@ public class ListViewModel extends ViewModel {
         fetchRepos();
     }
 
-   public LiveData<AboutCountry> getRepos() {
+    public LiveData<AboutCountry> getRepos() {
         return repos;
     }
-    public LiveData<Boolean> getError() {
+  public   LiveData<Boolean> getError() {
         return repoLoadError;
     }
-  public   LiveData<Boolean> getLoading() {
+   public LiveData<Boolean> getLoading() {
         return loading;
     }
 

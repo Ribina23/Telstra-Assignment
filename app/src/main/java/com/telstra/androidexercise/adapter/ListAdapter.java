@@ -6,27 +6,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.telstra.androidexercise.R;
 import com.telstra.androidexercise.data.RowsData;
-import com.telstra.androidexercise.viewmodel.ListViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
 
+public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
     private List<RowsData> listdata= new ArrayList<>();
     private Context context;
 
@@ -34,17 +29,17 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         this.listdata = responseData;
         this.context = context;
     }
-/* public    ListAdapter(ListViewModel viewModel, LifecycleOwner lifecycleOwner, Context context) {
-        this.context = context;
-        viewModel.getRepos().observe(lifecycleOwner, repos -> {
-            listdata.clear();
-            if (repos != null) {
-                listdata.addAll(repos.getRows());
-                notifyDataSetChanged();
-            }
-        });
-        setHasStableIds(true);
-    }*/
+    /* public    ListAdapter(ListViewModel viewModel, LifecycleOwner lifecycleOwner, Context context) {
+            this.context = context;
+            viewModel.getRepos().observe(lifecycleOwner, repos -> {
+                listdata.clear();
+                if (repos != null) {
+                    listdata.addAll(repos.getRows());
+                    notifyDataSetChanged();
+                }
+            });
+            setHasStableIds(true);
+        }*/
     // RecyclerView recyclerView;
    /* public ListAdapter(MyListData[] listdata) {
         this.listdata = listdata;
@@ -86,7 +81,8 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
                 .centerCrop()
                 .into(holder.imageView);*/
         Picasso.get()
-                .load(myListData.getImageHref()).fit().placeholder(R.drawable.placeholder).error(R.drawable.placeholder)
+                .load(myListData.getImageHref()).fit().placeholder(R.drawable.placeholder)
+                .error(R.drawable.placeholder)
                 .into(holder.imageView, new Callback() {
                     @Override
                     public void onSuccess() {
@@ -111,7 +107,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         public ImageView imageView;
         public TextView titleTv;
         public TextView descriptionTv;
-public CardView cardView;
+        public CardView cardView;
         public ViewHolder(View itemView) {
             super(itemView);
             this.imageView = (ImageView) itemView.findViewById(R.id.userIv);
