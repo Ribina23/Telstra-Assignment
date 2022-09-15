@@ -78,7 +78,8 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
     implementation "com.squareup.picasso:picasso:$picassoVersion"
 
-
+    testImplementation "androidx.arch.core:core-testing:2.1.0"
+    testImplementation 'org.mockito:mockito-core:4.4.0'
 //    debugImplementation "androidx.fragment:fragment-testing:$fragment_version"
 
    /* androidTestImplementation 'androidx.test:rules:1.4.0'

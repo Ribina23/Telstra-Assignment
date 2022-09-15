@@ -29,21 +29,18 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         this.listdata = responseData;
         this.context = context;
     }
-    /* public    ListAdapter(ListViewModel viewModel, LifecycleOwner lifecycleOwner, Context context) {
-            this.context = context;
-            viewModel.getRepos().observe(lifecycleOwner, repos -> {
-                listdata.clear();
-                if (repos != null) {
-                    listdata.addAll(repos.getRows());
-                    notifyDataSetChanged();
-                }
-            });
-            setHasStableIds(true);
-        }*/
-    // RecyclerView recyclerView;
-   /* public ListAdapter(MyListData[] listdata) {
-        this.listdata = listdata;
-    }*/
+
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());

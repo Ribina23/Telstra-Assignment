@@ -10,8 +10,11 @@ import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.telstra.androidexercise.R;
+import com.telstra.androidexercise.adapter.ListAdapter;
 import com.telstra.androidexercise.data.RowsData;
 import com.telstra.androidexercise.service.SetResult;
 import com.telstra.androidexercise.ui.ListFragment;
@@ -26,7 +29,7 @@ import javax.inject.Inject;
 import dagger.android.support.DaggerAppCompatActivity;
 
 
-public class MainActivity extends DaggerAppCompatActivity implements SetResult {
+public class MainActivity extends DaggerAppCompatActivity  implements SetResult{
 
     /*@Override
     protected int layoutRes() {
@@ -35,7 +38,7 @@ public class MainActivity extends DaggerAppCompatActivity implements SetResult {
 */
     @Inject
     ViewModelFactory viewModelFactory;
-
+    ListAdapter   adapter;
     private ListViewModel viewModel;
     TextView title;
     private static final String TAG_MY_FRAGMENT = "myFragment";
@@ -78,7 +81,7 @@ public class MainActivity extends DaggerAppCompatActivity implements SetResult {
 
     }
 
-    @Override
+    /*@Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         instantiateFragments(savedInstanceState);
@@ -95,16 +98,16 @@ public class MainActivity extends DaggerAppCompatActivity implements SetResult {
             transaction.add(R.id.frameLayout, mFragment,TAG_MY_FRAGMENT);
             transaction.commit();
         }
-    }
-    @Override
+    }*/
+  /*  @Override
     protected void onSaveInstanceState(@NonNull @NotNull Bundle outState) {
         super.onSaveInstanceState(outState);
         FragmentManager manager = getSupportFragmentManager();
         manager.putFragment(outState, TAG_MY_FRAGMENT, mFragment);
-    }
+    }*/
 
     private ArrayList<RowsData> responseData = new ArrayList<>();
-
+    RecyclerView recyclerView;
     private void observableViewModel() {
         viewModel.getRepos().observe(this, repos -> {
             if (repos != null) {
@@ -142,5 +145,4 @@ public class MainActivity extends DaggerAppCompatActivity implements SetResult {
      ListFragment listFragment= (ListFragment) getSupportFragmentManager().findFragmentById(R.id.frameLayout);
         listFragment.setData(data);
     }
-
 }

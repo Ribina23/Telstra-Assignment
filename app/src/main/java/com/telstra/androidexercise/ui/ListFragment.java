@@ -1,6 +1,7 @@
 package com.telstra.androidexercise.ui;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,31 +67,7 @@ private static final String STATE_ITEMS = "items";
 
         }
     }
-    @SuppressWarnings("unchecked")
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState != null) {
-            // Restore some state that needs to happen after the Activity was created
-            //
-            // Note #1: Our views haven't had their states restored yet
-            // This could be a good place to restore a ListView's contents (and it's your last
-            // opportunity if you want your scroll position to be restored properly)
-            //
-            // Note #2:
-            // The following line will cause an unchecked type cast compiler warning
-            // It's impossible to actually check the type because of Java's type erasure:
-            //      At runtime all generic types become Object
-            // So the best you can do is add the @SuppressWarnings("unchecked") annotation
-            // and understand that you must make sure to not use a different type anywhere
-            responseArraylist = (ArrayList<RowsData>) savedInstanceState.getSerializable(STATE_ITEMS);
-        } else {
-            responseArraylist = new ArrayList<>();
-        }
 
-        adapter=new ListAdapter(responseArraylist, getBaseActivity(), getContext());
-        recyclerView.setAdapter(adapter);
-    }
 
 
     @Override
@@ -98,14 +75,7 @@ private static final String STATE_ITEMS = "items";
         return R.layout.fragment_list;
     }
 
-    @Override
-    public void onSaveInstanceState(@NonNull @NotNull Bundle outState) {
-        super.onSaveInstanceState(outState);
 
-
-            outState.putSerializable(STATE_ITEMS, responseArraylist);
-
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -116,6 +86,8 @@ private static final String STATE_ITEMS = "items";
 
         recyclerView = (RecyclerView) v.findViewById(R.id.recycler_view);
         errorTextView=(TextView) v.findViewById(R.id.errorTv);
+// recyclerView = (RecyclerView) v.findViewById(R.id.recycler_view);
+//
 //
         return v;
     }
@@ -124,13 +96,15 @@ private static final String STATE_ITEMS = "items";
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Log.d("Okhttp","onviewcreated");
         //viewmodel declaration
         viewModel = ViewModelProviders.of(getBaseActivity(), viewModelFactory).get(ListViewModel.class);
-//        recyclerView.addItemDecoration(new DividerItemDecoration(getBaseActivity(), DividerItemDecoration.VERTICAL));
-//Recyclerview adapter setting
         adapter=new ListAdapter(responseArraylist, getBaseActivity(), getContext());
         recyclerView.setLayoutManager(new LinearLayoutManager(getBaseActivity()));
-        recyclerView.setAdapter(adapter);
+//        recyclerView.addItemDecoration(new DividerItemDecoration(getBaseActivity(), DividerItemDecoration.VERTICAL));
+//Recyclerview adapter setting
+
+//        recyclerView.setAdapter(adapter);
 //swipe refresh implemnettaion
         swipeRefreshLayout.setColorSchemeResources(R.color.orange, R.color.blue, R.color.green);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -149,10 +123,15 @@ private static final String STATE_ITEMS = "items";
     private void observableViewModel() {
         viewModel.getRepos().observe(getBaseActivity(), repos -> {
             if (repos != null) {
-
+                responseArraylist.clear();
+                responseArraylist.addAll(repos.getRows());
                 recyclerView.setVisibility(View.VISIBLE);
-//                responseArraylist.clear();
-//                responseArraylist.addAll(repos.getRows());
+//                adapter=new ListAdapter(responseData, getBaseActivity(), getActivity());
+//                recyclerView.setAdapter(adapter);
+
+                recyclerView.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
+//
 //                adapter.notifyDataSetChanged();
 
             }
