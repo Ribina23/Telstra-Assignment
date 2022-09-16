@@ -7,6 +7,11 @@ public class AboutCountry {
 
     List<RowsData> rows;
 
+    public AboutCountry(String title, List<RowsData> rows) {
+        this.title = title;
+        this.rows = rows;
+    }
+
     public String getTitle() {
         return title;
     }

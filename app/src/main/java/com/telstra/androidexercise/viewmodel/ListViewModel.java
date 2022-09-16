@@ -41,9 +41,10 @@ public class ListViewModel extends ViewModel {
     }
 
     public void fetchRepos() {
-        loading.setValue(true);
+//        loading.setValue(true);
         disposable.add(repoRepository.getRepositories().subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableSingleObserver<AboutCountry>() {
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSingleObserver<AboutCountry>() {
                     @Override
                     public void onSuccess(AboutCountry value) {
                         repoLoadError.setValue(false);

@@ -5,6 +5,12 @@ public class RowsData {
     String description;
     String imageHref;
 
+    public RowsData(String title, String description, String imageHref) {
+        this.title = title;
+        this.description = description;
+        this.imageHref = imageHref;
+    }
+
     public String getTitle() {
         return title;
     }
