@@ -1,13 +1,18 @@
 package com.telstra.androidexercise.data;
 
+import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
-//data model class
-public class AboutCountry {
-    String title;
+//model class
+public class AboutCountry implements Serializable {
 
-    List<RowsData> rows;
+   String title;
 
-    public AboutCountry(String title, List<RowsData> rows) {
+    ArrayList<RowsData> rows;
+
+    public AboutCountry(String title, ArrayList<RowsData> rows) {
         this.title = title;
         this.rows = rows;
     }
@@ -20,11 +25,11 @@ public class AboutCountry {
         this.title = title;
     }
 
-    public List<RowsData> getRows() {
+    public ArrayList<RowsData> getRows() {
         return rows;
     }
 
-    public void setRows(List<RowsData> rows) {
+    public void setRows(ArrayList<RowsData> rows) {
         this.rows = rows;
     }
 }
