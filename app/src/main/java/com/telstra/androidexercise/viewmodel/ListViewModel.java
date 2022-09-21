@@ -1,5 +1,7 @@
 package com.telstra.androidexercise.viewmodel;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -19,7 +21,7 @@ public class ListViewModel extends ViewModel {
     private final RepoRepository repoRepository;
     private CompositeDisposable disposable;
 
-    private final MutableLiveData<AboutCountry> repos = new MutableLiveData<>();
+    public  MutableLiveData<AboutCountry> repos = new MutableLiveData<>();
     private final MutableLiveData<Boolean> repoLoadError = new MutableLiveData<>();
     private final MutableLiveData<Boolean> loading = new MutableLiveData<>();
 
@@ -27,7 +29,7 @@ public class ListViewModel extends ViewModel {
     public ListViewModel(RepoRepository repoRepository) {
         this.repoRepository = repoRepository;
         disposable = new CompositeDisposable();
-        fetchRepos();
+       // fetchRepos();
     }
 
     public LiveData<AboutCountry> getRepos() {
@@ -41,8 +43,9 @@ public class ListViewModel extends ViewModel {
     }
 
     public void fetchRepos() {
-//        loading.setValue(true);
-        disposable.add(repoRepository.getRepositories().subscribeOn(Schedulers.io())
+        loading.setValue(true);
+        disposable.add(repoRepository.getRepositories()
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableSingleObserver<AboutCountry>() {
                     @Override

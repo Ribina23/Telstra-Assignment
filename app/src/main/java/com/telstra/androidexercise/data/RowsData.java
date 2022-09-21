@@ -1,6 +1,8 @@
 package com.telstra.androidexercise.data;
 
-public class RowsData {
+import java.io.Serializable;
+
+public class RowsData implements Serializable {
     String title;
     String description;
     String imageHref;
