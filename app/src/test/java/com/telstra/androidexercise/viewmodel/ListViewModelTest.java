@@ -34,6 +34,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
 
+
 @RunWith(MockitoJUnitRunner.class)
 public class ListViewModelTest {
     @ClassRule
