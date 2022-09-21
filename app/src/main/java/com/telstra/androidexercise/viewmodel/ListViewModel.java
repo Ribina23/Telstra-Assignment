@@ -1,5 +1,7 @@
 package com.telstra.androidexercise.viewmodel;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -19,7 +21,7 @@ public class ListViewModel extends ViewModel {
     private final RepoRepository repoRepository;
     private CompositeDisposable disposable;
 
-    private final MutableLiveData<AboutCountry> repos = new MutableLiveData<>();
+    public MutableLiveData<AboutCountry> repos = new MutableLiveData<>();
     private final MutableLiveData<Boolean> repoLoadError = new MutableLiveData<>();
     private final MutableLiveData<Boolean> loading = new MutableLiveData<>();
 
@@ -27,24 +29,29 @@ public class ListViewModel extends ViewModel {
     public ListViewModel(RepoRepository repoRepository) {
         this.repoRepository = repoRepository;
         disposable = new CompositeDisposable();
-        fetchRepos();
+        // fetchRepos();
     }
 
     public LiveData<AboutCountry> getRepos() {
         return repos;
     }
-  public   LiveData<Boolean> getError() {
+
+    public LiveData<Boolean> getError() {
         return repoLoadError;
     }
-   public LiveData<Boolean> getLoading() {
+
+    public LiveData<Boolean> getLoading() {
         return loading;
     }
 
     public void fetchRepos() {
-//        loading.setValue(true);
-        disposable.add(repoRepository.getRepositories().subscribeOn(Schedulers.io())
+        loading.setValue(true);
+        //calling the api using rx java
+        disposable.add(repoRepository.getRepositories()
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableSingleObserver<AboutCountry>() {
+                    //onSuccess method
                     @Override
                     public void onSuccess(AboutCountry value) {
                         repoLoadError.setValue(false);
@@ -52,6 +59,7 @@ public class ListViewModel extends ViewModel {
                         loading.setValue(false);
                     }
 
+                    //onError method
                     @Override
                     public void onError(Throwable e) {
                         repoLoadError.setValue(true);
@@ -60,6 +68,7 @@ public class ListViewModel extends ViewModel {
                 }));
     }
 
+    //clearing the disposable
     @Override
     protected void onCleared() {
         super.onCleared();

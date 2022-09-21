@@ -14,7 +14,7 @@ public static BaseApplication instance;
         super.onCreate();
         instance=this;
     }
-
+    //Dagger component creation
     @Override
     protected AndroidInjector<? extends DaggerApplication> applicationInjector() {
         ApplicationComponent component = DaggerApplicationComponent.builder().application(this).build();

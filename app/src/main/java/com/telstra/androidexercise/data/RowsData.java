@@ -1,5 +1,5 @@
 package com.telstra.androidexercise.data;
-
+//data model class
 public class RowsData {
     String title;
     String description;

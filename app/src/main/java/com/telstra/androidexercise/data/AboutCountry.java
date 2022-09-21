@@ -1,7 +1,7 @@
 package com.telstra.androidexercise.data;
 
 import java.util.List;
-
+//data model class
 public class AboutCountry {
     String title;
 
