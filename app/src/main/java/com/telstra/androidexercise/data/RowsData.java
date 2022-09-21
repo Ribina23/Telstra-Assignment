@@ -1,7 +1,7 @@
 package com.telstra.androidexercise.data;
 
 import java.io.Serializable;
-
+//model class
 public class RowsData implements Serializable {
     String title;
     String description;

@@ -5,7 +5,7 @@ import android.content.Context;
 
 import dagger.Binds;
 import dagger.Module;
-
+//providing context module
 @Module
 public abstract class ContextModule {
 

@@ -4,7 +4,6 @@ import android.util.Log;
 
 import com.telstra.androidexercise.BuildConfig;
 import com.telstra.androidexercise.base.BaseApplication;
-import com.telstra.androidexercise.di.scope.AppScope;
 import com.telstra.androidexercise.service.ApiService;
 
 import java.io.File;
@@ -43,6 +42,7 @@ public class ApplicationModule {
                  .addConverterFactory(GsonConverterFactory.create())
                  .build();
      }*/
+    //provides retrofit instance
     @Provides
     @Singleton
     static Retrofit provideRetrofit(
@@ -56,7 +56,7 @@ public class ApplicationModule {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
     }
-
+//provides okhttp client instance
     @Provides
     @Singleton
     static OkHttpClient provideOkHttpClient(
@@ -79,7 +79,7 @@ public class ApplicationModule {
     static ApiService provideRetrofitService(Retrofit retrofit) {
         return retrofit.create(ApiService.class);
     }
-
+//log interceptor for showing logs of api call
     @Provides
     @Singleton
     static HttpLoggingInterceptor provideHttpLoggingInterceptor() {
@@ -88,7 +88,7 @@ public class ApplicationModule {
         Log.d("OkHttp", logging.toString());
         return logging;
     }
-
+//providing cache storing mechanism
     @Provides
     static Cache provideCache(BaseApplication context) {
         Cache cache = null;

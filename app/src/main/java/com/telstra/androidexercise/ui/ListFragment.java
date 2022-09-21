@@ -35,39 +35,16 @@ import io.reactivex.disposables.Disposable;
 
 
 public class ListFragment extends BaseFragment implements SetResult {
-    /*@BindView(R.id.recycler_view)*/ RecyclerView recyclerView;
-    /*@BindView(R.id.errorTV)*/ TextView errorTextView;
-//    @BindView(R.id.loading_view) View loadingView;
-private static final String STATE_ITEMS = "items";
+
     private ListAdapter adapter;
-    private List<RowsData> responseData = new ArrayList<>();
-    private ProgressBar mainProgressBar;
-    private Disposable disposable;
+    //injecting viewmodel factory
     @Inject
     ViewModelFactory viewModelFactory;
-    private ListViewModel viewModel;
+    //declaring views
+    RecyclerView recyclerView;
+    TextView errorTextView;
     SwipeRefreshLayout swipeRefreshLayout;
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (savedInstanceState != null) {
-            // Restore some state before we've even inflated our own layout
-            // This could be generic things like an ID that our Fragment represents
-
-        }
-    }
-
+    private ListViewModel viewModel;
 
 
     @Override
@@ -76,41 +53,38 @@ private static final String STATE_ITEMS = "items";
     }
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_list, container, false);
+        //initialising views
         swipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipeHRL);
 
         recyclerView = (RecyclerView) v.findViewById(R.id.recycler_view);
-        errorTextView=(TextView) v.findViewById(R.id.errorTv);
-// recyclerView = (RecyclerView) v.findViewById(R.id.recycler_view);
-//
-//
+        errorTextView = (TextView) v.findViewById(R.id.errorTv);
+
         return v;
     }
+
     private ArrayList<RowsData> responseArraylist = new ArrayList();
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Log.d("Okhttp","onviewcreated");
+
         //viewmodel declaration
         viewModel = ViewModelProviders.of(getBaseActivity(), viewModelFactory).get(ListViewModel.class);
-        adapter=new ListAdapter(responseArraylist, getBaseActivity(), getContext());
+        //adapter setting
+        adapter = new ListAdapter(responseArraylist, getBaseActivity(), getContext());
         recyclerView.setLayoutManager(new LinearLayoutManager(getBaseActivity()));
-//        recyclerView.addItemDecoration(new DividerItemDecoration(getBaseActivity(), DividerItemDecoration.VERTICAL));
-//Recyclerview adapter setting
 
-//        recyclerView.setAdapter(adapter);
-//swipe refresh implemnettaion
+//swipe refresh implementation
         swipeRefreshLayout.setColorSchemeResources(R.color.orange, R.color.blue, R.color.green);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
+//On refresh call api
                 swipeRefreshLayout.setRefreshing(false);
                 viewModel.fetchRepos();
 
@@ -126,17 +100,15 @@ private static final String STATE_ITEMS = "items";
                 responseArraylist.clear();
                 responseArraylist.addAll(repos.getRows());
                 recyclerView.setVisibility(View.VISIBLE);
-//                adapter=new ListAdapter(responseData, getBaseActivity(), getActivity());
-//                recyclerView.setAdapter(adapter);
+
 
                 recyclerView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
-//
-//                adapter.notifyDataSetChanged();
+
 
             }
         });
-
+//onError method
         viewModel.getError().observe(getBaseActivity(), isError -> {
             if (isError != null) if (isError) {
                 errorTextView.setVisibility(View.VISIBLE);
@@ -147,7 +119,7 @@ private static final String STATE_ITEMS = "items";
                 errorTextView.setText(null);
             }
         });
-
+//onLoading method
         viewModel.getLoading().observe(getBaseActivity(), isLoading -> {
             if (isLoading != null) {
 //                loadingView.setVisibility(isLoading ? View.VISIBLE : View.GONE);
